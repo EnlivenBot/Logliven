@@ -4,3 +4,17 @@
     build:
       context: .
       dockerfile: Logliven/Dockerfile
+    environment:
+      ConnectionStrings__Logliven: "Server=postgres;Port=5432;Database=Logliven;User Id=postgres;Password=localpassword;"
+  
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: localpassword
+    restart: always
+    networks:
+      - logliven-network
+
+networks:
+  logliven-network:
+    driver: bridge

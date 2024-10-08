@@ -1,7 +1,13 @@
+using Logliven.Postgres;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddPooledDbContextFactory<LoglivenDbContext>(optionsBuilder =>
+    optionsBuilder.UseNpgsql(builder.Configuration.GetConnectionString("Logliven")));
 
 var app = builder.Build();
 
@@ -23,5 +29,11 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<LoglivenDbContext>();
+    await dbContext.Database.MigrateAsync();
+}
 
 app.Run();
