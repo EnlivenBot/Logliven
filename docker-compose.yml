@@ -1,0 +1,6 @@
+﻿services:
+  logliven:
+    image: logliven
+    build:
+      context: .
+      dockerfile: Logliven/Dockerfile
