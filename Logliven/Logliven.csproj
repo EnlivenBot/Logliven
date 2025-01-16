@@ -14,6 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Logliven.Discord\Logliven.Discord.csproj" />
       <ProjectReference Include="..\Logliven.Postgres\Logliven.Postgres.csproj" />
     </ItemGroup>
 

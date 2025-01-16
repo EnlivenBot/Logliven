@@ -1,9 +1,10 @@
+using Logliven.Discord;
 using Logliven.Postgres;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddDiscord(builder.Configuration);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddPooledDbContextFactory<LoglivenDbContext>(optionsBuilder =>
