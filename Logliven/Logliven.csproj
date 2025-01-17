@@ -1,21 +1,44 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-    <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>aspnet-Logliven-cab313c2-420f-4413-a717-d4c3abc0994f</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\.dockerignore">
+      <Link>.dockerignore</Link>
+    </Content>
+  </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Logliven.Discord\Logliven.Discord.csproj" />
-      <ProjectReference Include="..\Logliven.Postgres\Logliven.Postgres.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Logliven.Client\Logliven.Client.csproj"/>
+    <ProjectReference Include="..\Logliven.Discord\Logliven.Discord.csproj" />
+    <ProjectReference Include="..\Logliven.Postgres\Logliven.Postgres.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Discord.OAuth2.AspNetCore" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Components\Account\Pages\Manage\ChangePassword.razor" />
+    <_ContentIncludedByDefault Remove="Components\Account\Pages\Manage\DeletePersonalData.razor" />
+    <_ContentIncludedByDefault Remove="Components\Account\Pages\Manage\Disable2fa.razor" />
+    <_ContentIncludedByDefault Remove="Components\Account\Pages\Manage\Email.razor" />
+    <_ContentIncludedByDefault Remove="Components\Account\Pages\Manage\EnableAuthenticator.razor" />
+    <_ContentIncludedByDefault Remove="Components\Account\Pages\Manage\ExternalLogins.razor" />
+    <_ContentIncludedByDefault Remove="Components\Account\Pages\Manage\GenerateRecoveryCodes.razor" />
+    <_ContentIncludedByDefault Remove="Components\Account\Pages\Manage\Index.razor" />
+    <_ContentIncludedByDefault Remove="Components\Account\Pages\Manage\PersonalData.razor" />
+    <_ContentIncludedByDefault Remove="Components\Account\Pages\Manage\ResetAuthenticator.razor" />
+    <_ContentIncludedByDefault Remove="Components\Account\Pages\Manage\SetPassword.razor" />
+    <_ContentIncludedByDefault Remove="Components\Account\Pages\Manage\TwoFactorAuthentication.razor" />
+    <_ContentIncludedByDefault Remove="Components\Account\Pages\Manage\_Imports.razor" />
+  </ItemGroup>
 
 </Project>

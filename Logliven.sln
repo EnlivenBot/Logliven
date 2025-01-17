@@ -1,7 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logliven", "Logliven\Logliven.csproj", "{153B3040-E9F4-4B9C-AF92-726D9E539763}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AE569EE1-6694-47B3-BD88-C46F4B151F09}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
@@ -16,16 +14,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logliven.Discord", "Loglive
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logliven.Common", "Logliven.Common\Logliven.Common.csproj", "{5951590F-C5AE-4C56-AAA4-F413B8C81447}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logliven", "Logliven\Logliven.csproj", "{B587670B-01CC-455A-849D-BD8911348433}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logliven.Client", "Logliven.Client\Logliven.Client.csproj", "{25848F6C-5402-4DBE-864C-0FC2F14CC713}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{153B3040-E9F4-4B9C-AF92-726D9E539763}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{153B3040-E9F4-4B9C-AF92-726D9E539763}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{153B3040-E9F4-4B9C-AF92-726D9E539763}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{153B3040-E9F4-4B9C-AF92-726D9E539763}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1E8A6008-2EF0-4EB9-8D31-40DEDE460BF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1E8A6008-2EF0-4EB9-8D31-40DEDE460BF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E8A6008-2EF0-4EB9-8D31-40DEDE460BF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -38,5 +36,13 @@ Global
 		{5951590F-C5AE-4C56-AAA4-F413B8C81447}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5951590F-C5AE-4C56-AAA4-F413B8C81447}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5951590F-C5AE-4C56-AAA4-F413B8C81447}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B587670B-01CC-455A-849D-BD8911348433}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B587670B-01CC-455A-849D-BD8911348433}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B587670B-01CC-455A-849D-BD8911348433}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B587670B-01CC-455A-849D-BD8911348433}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25848F6C-5402-4DBE-864C-0FC2F14CC713}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25848F6C-5402-4DBE-864C-0FC2F14CC713}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25848F6C-5402-4DBE-864C-0FC2F14CC713}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25848F6C-5402-4DBE-864C-0FC2F14CC713}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

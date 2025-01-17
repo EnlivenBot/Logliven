@@ -62,7 +62,7 @@ public class DiscordClientBackgroundService : BackgroundService
 
     public override async Task StartAsync(CancellationToken cancellationToken)
     {
-        var token = _configuration.GetValue<string>("DiscordBotToken");
+        var token = _configuration.GetValue<string>("Discord:BotToken");
         if (string.IsNullOrWhiteSpace(token))
         {
             _logger.LogCritical("Discord bot token is empty. Shutdown");
