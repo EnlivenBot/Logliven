@@ -1,32 +1,35 @@
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Logliven.Components;
-using Logliven.Components.Account;
 using Logliven.Discord;
 using Logliven.Postgres;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDiscord(builder.Configuration);
 
 // Add services to the container.
+builder.Services.AddControllersWithViews();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents()
     .AddAuthenticationStateSerialization();
 
-builder.Services.AddCascadingAuthenticationState();
-builder.Services.AddScoped<IdentityUserAccessor>();
-builder.Services.AddScoped<IdentityRedirectManager>();
-builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 
-builder.Services.AddIdentityCore<IdentityUser>();
-builder.Services.AddAuthentication()
+builder.Services.AddCascadingAuthenticationState();
+
+builder.Services.AddAuthentication(options => {
+        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    })
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/account/login";
+        options.LogoutPath = "/account/logout";
+    })
     .AddDiscord(options => {
         options.AppId = builder.Configuration["Discord:AppId"];
         options.AppSecret = builder.Configuration["Discord:AppSecret"];
-        
+
         options.Scope.Add("guilds");
     });
 
@@ -45,23 +48,21 @@ else {
     app.UseHsts();
 }
 
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseHttpsRedirection();
-
-
 app.UseAntiforgery();
 
 app.MapStaticAssets();
+app.MapControllers();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(Logliven.Client._Imports).Assembly);
 
-// Add additional endpoints required by the Identity /Account Razor components.
-app.MapAdditionalIdentityEndpoints();
-
-await using (var scope = app.Services.CreateAsyncScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<LoglivenDbContext>();
+await using (var scope = app.Services.CreateAsyncScope()) {
+    var dbContextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<LoglivenDbContext>>();
+    await using var dbContext = await dbContextFactory.CreateDbContextAsync();
     await dbContext.Database.MigrateAsync();
 }
 
