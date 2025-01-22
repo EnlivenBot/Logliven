@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Logliven.Discord.Services;
 
-public class DiscordClientReliabilityBackgroundService : BackgroundService {
+internal class DiscordClientReliabilityBackgroundService : BackgroundService {
     // --- Begin Configuration Section ---
     // How long should we wait on the client to reconnect before resetting?
     private static readonly TimeSpan _timeout = TimeSpan.FromSeconds(30);

@@ -7,10 +7,12 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Logliven.Discord;
 
 public static class ExtensionMethods {
-    public static IServiceCollection AddDiscord(this IServiceCollection services, IConfiguration configuration) {
+    public static IServiceCollection SetupDiscord(this IServiceCollection services, IConfiguration configuration) {
         services.ConfigureFromSection<DiscordSocketConfig>(configuration);
         services.AddSingleton<DiscordSocketClient>();
         services.AddSingleton<DiscordClientBackgroundService>();
+        services.AddSingleton<DiscordClientReliabilityBackgroundService>();
+        services.AddSingleton<DiscordClientGuildListenerService>();
 
         return services;
     }

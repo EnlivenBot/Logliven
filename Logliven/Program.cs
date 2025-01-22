@@ -1,12 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Logliven.Components;
 using Logliven.Discord;
+using Logliven.Infrastructure.Authentication;
 using Logliven.Postgres;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddDiscord(builder.Configuration);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -15,24 +13,8 @@ builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents()
     .AddAuthenticationStateSerialization();
 
-
-builder.Services.AddCascadingAuthenticationState();
-
-builder.Services.AddAuthentication(options => {
-        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    })
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/account/login";
-        options.LogoutPath = "/account/logout";
-    })
-    .AddDiscord(options => {
-        options.AppId = builder.Configuration["Discord:AppId"];
-        options.AppSecret = builder.Configuration["Discord:AppSecret"];
-
-        options.Scope.Add("guilds");
-    });
-
+builder.Services.SetupDiscord(builder.Configuration);
+builder.Services.SetupAuthentication();
 builder.Services.AddPooledDbContextFactory<LoglivenDbContext>(optionsBuilder =>
     optionsBuilder.UseNpgsql(builder.Configuration.GetConnectionString("Logliven")));
 

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Logliven.Discord.Services;
 
-public class DiscordClientBackgroundService : BackgroundService
+internal class DiscordClientBackgroundService : BackgroundService
 {
     private readonly DiscordSocketClient _discordSocketClient;
     private readonly IConfiguration _configuration;
