@@ -3,6 +3,7 @@ using Logliven.Components;
 using Logliven.Discord;
 using Logliven.Infrastructure.Authentication;
 using Logliven.Postgres;
+using Logliven.Services.Discord;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddRazorComponents()
     .AddAuthenticationStateSerialization();
 
 builder.Services.SetupDiscord(builder.Configuration);
+builder.Services.SetupDiscordRest();
 builder.Services.SetupAuthentication();
 builder.Services.AddPooledDbContextFactory<LoglivenDbContext>(optionsBuilder =>
     optionsBuilder.UseNpgsql(builder.Configuration.GetConnectionString("Logliven")));
