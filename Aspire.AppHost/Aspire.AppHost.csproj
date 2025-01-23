@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0"/>
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsAspireHost>true</IsAspireHost>
+        <UserSecretsId>e61ff5e9-3958-4627-aa4d-ee076be6dea1</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Aspire.Hosting.AppHost" Version="9.0.0"/>
+        <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+        <PackageReference Include="Aspire4Wasm" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Logliven.Client\Logliven.Client.csproj" />
+      <ProjectReference Include="..\Logliven\Logliven.csproj" />
+    </ItemGroup>
+
+</Project>

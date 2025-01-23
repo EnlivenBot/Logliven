@@ -7,7 +7,8 @@ using Logliven.Postgres;
 using Logliven.Services.Discord;
 using Scalar.AspNetCore;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args)
+    .AddServiceDefaults();
 
 // Add services to the container.
 builder.Services.AddOpenApi();
@@ -22,8 +23,10 @@ builder.Services.AddRazorComponents()
 builder.Services.SetupDiscord(builder.Configuration);
 builder.Services.SetupDiscordRest();
 builder.Services.SetupAuthentication();
+
 builder.Services.AddPooledDbContextFactory<LoglivenDbContext>(optionsBuilder =>
-    optionsBuilder.UseNpgsql(builder.Configuration.GetConnectionString("Logliven")));
+    optionsBuilder.UseNpgsql(builder.Configuration.GetConnectionString("LoglivenDB")));
+builder.EnrichNpgsqlDbContext<LoglivenDbContext>();
 
 var app = builder.Build();
 
@@ -46,6 +49,7 @@ app.MapOpenApi();
 app.MapScalarApiReference()
     .RequireAuthorization();
 
+app.MapDefaultEndpoints();
 app.MapStaticAssets();
 app.MapControllers();
 app.MapRazorComponents<App>()
