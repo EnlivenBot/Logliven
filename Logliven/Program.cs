@@ -1,14 +1,19 @@
+#pragma warning disable EXTEXP0018
 using Microsoft.EntityFrameworkCore;
 using Logliven.Components;
 using Logliven.Discord;
 using Logliven.Infrastructure.Authentication;
 using Logliven.Postgres;
 using Logliven.Services.Discord;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddOpenApi();
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents()
@@ -36,6 +41,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseHttpsRedirection();
 app.UseAntiforgery();
+
+app.MapOpenApi();
+app.MapScalarApiReference()
+    .RequireAuthorization();
 
 app.MapStaticAssets();
 app.MapControllers();

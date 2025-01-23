@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Logliven.Controllers;
 
-[ApiController]
 [Route("account")]
 public class AccountController : Controller {
     [HttpGet("login")]
