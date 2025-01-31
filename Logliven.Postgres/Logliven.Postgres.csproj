@@ -15,4 +15,8 @@
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Logliven.Common\Logliven.Common.csproj" />
+    </ItemGroup>
+
 </Project>

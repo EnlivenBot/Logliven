@@ -14,4 +14,8 @@
         <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Logliven.Common\Logliven.Common.csproj" />
+    </ItemGroup>
+
 </Project>

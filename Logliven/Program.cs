@@ -1,9 +1,13 @@
 #pragma warning disable EXTEXP0018
+using Logliven.Client.Services;
+using Logliven.Common;
 using Microsoft.EntityFrameworkCore;
 using Logliven.Components;
 using Logliven.Discord;
 using Logliven.Infrastructure.Authentication;
+using Logliven.Infrastructure.Exceptions;
 using Logliven.Postgres;
+using Logliven.Services;
 using Logliven.Services.Discord;
 using Scalar.AspNetCore;
 
@@ -12,9 +16,11 @@ var builder = WebApplication.CreateBuilder(args)
 
 // Add services to the container.
 builder.Services.AddOpenApi();
+builder.Services.AddProblemDetails();
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
+builder.Services.AddMemoryCache();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents()
@@ -27,6 +33,8 @@ builder.Services.SetupAuthentication();
 builder.Services.AddPooledDbContextFactory<LoglivenDbContext>(optionsBuilder =>
     optionsBuilder.UseNpgsql(builder.Configuration.GetConnectionString("LoglivenDB")));
 builder.EnrichNpgsqlDbContext<LoglivenDbContext>();
+
+builder.Services.AddScoped<IGuildService, GuildService>();
 
 var app = builder.Build();
 
@@ -56,6 +64,13 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(Logliven.Client._Imports).Assembly);
+
+app.UseExceptionHandler(new ExceptionHandlerOptions() {
+    StatusCodeSelector = ex => ex switch {
+        NotFoundException => StatusCodes.Status404NotFound,
+        _ => StatusCodes.Status500InternalServerError
+    }
+});
 
 await using (var scope = app.Services.CreateAsyncScope()) {
     var dbContextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<LoglivenDbContext>>();

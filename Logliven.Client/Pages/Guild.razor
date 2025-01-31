@@ -1,0 +1,117 @@
+﻿@page "/guild/{GuildId:long}"
+
+@using System.Diagnostics
+@using Microsoft.AspNetCore.Authorization
+@using Logliven.Client.Models
+@using Logliven.Client.Services
+@using Logliven.Postgres
+@inject IGuildService GuildService
+
+@rendermode InteractiveAuto
+@attribute [Authorize]
+
+<PageTitle>@(GuildCard?.Name ?? "Loading...")</PageTitle>
+
+@if (GuildCard is null)
+{
+    <div>Загрузка...</div>
+}
+else
+{
+    <div class="card">
+        @if (!string.IsNullOrEmpty(GuildCard.IconUrl))
+        {
+            <img src="@GuildCard.IconUrl" class="card-img-top" alt="Guild Icon" style="width: 128px; height: 128px; object-fit: cover;">
+        }
+        <div class="card-body">
+            <h5 class="card-title">@GuildCard.Name</h5>
+            
+            <h6 class="card-subtitle mb-2 mt-4">Ограничения каналов</h6>
+            <div class="list-group mb-4">
+                @foreach (var restriction in GuildCard.Restrictions)
+                {
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>#@GuildCard.Channels[restriction.ChannelId]</strong>
+                                <span class="ms-2 badge bg-info">@restriction.Type</span>
+                                <small class="text-muted ms-2">by @restriction.Author.Discriminator</small>
+                            </div>
+                            <button class="btn btn-danger btn-sm" @onclick="() => RemoveRestriction(restriction.ChannelId)">
+                                Удалить
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-3">Добавить новое ограничение</h6>
+                    <div class="row g-3">
+                        <div class="col-md-5">
+                            <select class="form-select" @bind="SelectedChannelId">
+                                <option value="" disabled selected>Выбрать канал...</option>
+                                @foreach (var channel in GuildCard.Channels.Where(c => GuildCard.Restrictions.All(r => r.ChannelId != c.Key)))
+                                {
+                                    <option value="@channel.Key">#@channel.Value</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-5">
+                            <select class="form-select" @bind="SelectedRestrictionType">
+                                <option value="" disabled selected>Выбрать ограничение...</option>
+                                @foreach (var restrictionType in Enum.GetValues<RestrictionType>())
+                                {
+                                    <option value="@restrictionType">@restrictionType</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-primary w-100" 
+                                    @onclick="AddRestriction" 
+                                    disabled=@(!SelectedChannelId.HasValue || SelectedRestrictionType == null)>
+                                Добавить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public long GuildId { get; set; }
+    
+    private GuildCardView? GuildCard { get; set; }
+    private ulong? SelectedChannelId { get; set; }
+    private RestrictionType? SelectedRestrictionType { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadGuildCard();
+    }
+
+    private async Task LoadGuildCard()
+    {
+        GuildCard = await GuildService.GetGuildCard((ulong)GuildId);
+        SelectedChannelId = null;
+        SelectedRestrictionType = null;
+    }
+
+    private async Task AddRestriction()
+    {
+        if (!SelectedChannelId.HasValue || !SelectedRestrictionType.HasValue) return;
+        
+        await GuildService.AddChannelRestriction((ulong)GuildId, SelectedChannelId.Value, SelectedRestrictionType.Value);
+        await LoadGuildCard();
+    }
+
+    private async Task RemoveRestriction(ulong channelId)
+    {
+        await GuildService.RemoveChannelRestriction((ulong)GuildId, channelId);
+        await LoadGuildCard();
+    }
+}

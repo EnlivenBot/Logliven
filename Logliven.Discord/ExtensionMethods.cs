@@ -9,10 +9,11 @@ namespace Logliven.Discord;
 public static class ExtensionMethods {
     public static IServiceCollection SetupDiscord(this IServiceCollection services, IConfiguration configuration) {
         services.ConfigureFromSection<DiscordSocketConfig>(configuration);
-        services.AddSingleton<DiscordSocketClient>();
-        services.AddSingleton<DiscordClientBackgroundService>();
-        services.AddSingleton<DiscordClientReliabilityBackgroundService>();
-        services.AddSingleton<DiscordClientGuildListenerService>();
+        services.AddSingleton<DiscordBotClient>();
+        services.AddSingleton<DiscordSocketClient>(provider => provider.GetRequiredService<DiscordBotClient>());
+        services.AddHostedService<DiscordClientBackgroundService>();
+        services.AddHostedService<DiscordClientReliabilityBackgroundService>();
+        services.AddHostedService<DiscordClientGuildListenerService>();
 
         return services;
     }
