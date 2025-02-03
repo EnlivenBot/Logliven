@@ -1,4 +1,5 @@
 #pragma warning disable EXTEXP0018
+using System.Reflection;
 using Logliven.Client.Services;
 using Logliven.Common;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,8 @@ using Logliven.Postgres;
 using Logliven.Services;
 using Logliven.Services.Discord;
 using Scalar.AspNetCore;
+using SlimMessageBus.Host;
+using SlimMessageBus.Host.Memory;
 
 var builder = WebApplication.CreateBuilder(args)
     .AddServiceDefaults();
@@ -25,6 +28,10 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents()
     .AddAuthenticationStateSerialization();
+builder.Services.AddSlimMessageBus(b => {
+    b.WithProviderMemory()
+        .AutoDeclareFrom(Assembly.GetExecutingAssembly(), typeof(DiscordBotClient).Assembly);
+});
 
 builder.Services.SetupDiscord(builder.Configuration);
 builder.Services.SetupDiscordRest();

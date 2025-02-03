@@ -3,6 +3,7 @@ using Logliven.Client.Models;
 using Logliven.Client.Services;
 using Logliven.Common;
 using Logliven.Discord;
+using Logliven.Discord.Commands;
 using Logliven.Infrastructure.Authentication;
 using Logliven.Infrastructure.Exceptions;
 using Logliven.Postgres;
@@ -10,6 +11,7 @@ using Logliven.Postgres.Entities;
 using Logliven.Postgres.Extensions;
 using Logliven.Services.Discord;
 using Microsoft.EntityFrameworkCore;
+using SlimMessageBus;
 
 namespace Logliven.Services;
 
@@ -17,7 +19,8 @@ public class GuildService(
     DiscordRestClientService discordClientService,
     DiscordBotClient discordBotClient,
     IHttpContextAccessor httpContextAccessor,
-    IDbContextFactory<LoglivenDbContext> dbContextFactory) : IGuildService {
+    IDbContextFactory<LoglivenDbContext> dbContextFactory,
+    IMessageBus messageBus) : IGuildService {
     public async Task<IEnumerable<UserGuildView>> GetAvailableGuilds(CancellationToken token = default) {
         var userGuilds = await discordClientService.GetGuildSummaries(token);
 
@@ -77,7 +80,7 @@ public class GuildService(
             .EnsureExistsAsync(token);
         
         var userInfo = httpContextAccessor.HttpContext!.GetDiscordUserInfoOrThrow();
-        var user = await dbContext.Users.FirstOrDefaultAsync(entity => entity.Id == userInfo.Id)
+        var user = await dbContext.Users.FirstOrDefaultAsync(entity => entity.Id == userInfo.Id, cancellationToken: token)
             ?? dbContext.Users.Add(new UserEntity() {
                 Id = userInfo.Id,
                 Discriminator = userInfo.Username,
@@ -96,6 +99,8 @@ public class GuildService(
         
         dbContext.GuildChannels.Add(restriction);
         await dbContext.SaveChangesAsync(token);
+
+        await messageBus.Publish(new ChannelRestrictionsChangedEvent(guildId), cancellationToken: token);
     }
 
     public async Task RemoveChannelRestriction(ulong guildId, ulong channelId, CancellationToken token = default) {
@@ -108,5 +113,7 @@ public class GuildService(
         await dbContext.GuildChannels
             .Where(c => c.GuildId == guildId && c.Id == channelId)
             .ExecuteDeleteAsync(token);
+        
+        await messageBus.Publish(new ChannelRestrictionsChangedEvent(guildId), cancellationToken: token);
     }
 }

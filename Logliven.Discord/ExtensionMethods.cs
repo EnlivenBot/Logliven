@@ -14,6 +14,7 @@ public static class ExtensionMethods {
         services.AddHostedService<DiscordClientBackgroundService>();
         services.AddHostedService<DiscordClientReliabilityBackgroundService>();
         services.AddHostedService<DiscordClientGuildListenerService>();
+        services.AddHostedService<DiscordClientMessageReceivedHandlerService>();
 
         return services;
     }

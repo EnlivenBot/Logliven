@@ -21,5 +21,7 @@
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.2" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
     <PackageVersion Include="Scalar.AspNetCore" Version="2.0.4" />
+    <PackageVersion Include="SlimMessageBus" Version="3.0.0" />
+    <PackageVersion Include="SlimMessageBus.Host.Memory" Version="3.0.0" />
   </ItemGroup>
 </Project>
