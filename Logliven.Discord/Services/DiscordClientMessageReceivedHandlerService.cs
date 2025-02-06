@@ -14,7 +14,7 @@ namespace Logliven.Discord.Services;
 public partial class DiscordClientMessageReceivedHandlerService(
     IDbContextFactory<LoglivenDbContext> dbContextFactory,
     DiscordBotClient botClient,
-    MemoryCache memoryCache) : IHostedService, IConsumer<ChannelRestrictionsChangedEvent> {
+    IMemoryCache memoryCache) : IHostedService, IConsumer<ChannelRestrictionsChangedEvent> {
     public Task StartAsync(CancellationToken cancellationToken) {
         botClient.MessageReceived += BotClientOnMessageReceived;
 
